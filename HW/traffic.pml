@@ -81,3 +81,7 @@ init {
 		ped ! absent;
 	}
 }
+
+/* LTL Formulae */
+ltl p1 { (state_ped == CROSSING) -> (state_traffic == RED) }		// Pedestrian Crossing happens only if traffic light is red
+ltl p2 { ((x == present) -> <>(state_ped == CROSSING)) } 		// Eventually the pedestrian gets to cross if he comes over :)
