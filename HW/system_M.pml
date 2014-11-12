@@ -36,16 +36,18 @@ active proctype Environment() {
 		:: (state == A) && (timerCount != 0) && (assert_s == absent) -> state = B;
 		:: (state == B) && (assert_s == absent)		   	   -> state = A;
 		:: (state == C) && (assert_s == absent)		      	   -> state = C;
-		:: (state == D) && (return_s == absent) 		   -> state = D; return_s = present;
-		:: (state == D) && (timerCount != 0) && (return_s == absent) -> state = E;
-		:: (state == E) && (return_s == absent)   	   	   -> state = D; timerCount = timerCount - 1; return_s = present;
-	        :: (assert_s == present)		      			   -> lastState = state; state = D;
+		:: (state == D) && (timerCount == 0) 		   	   -> state = D; return_s = present;
+		:: (state == D) && (timerCount != 0) 		   	   -> state = E;
+		:: (state == E) 	       	     		     	   -> state = D; timerCount = timerCount - 1; return_s = present;
+	        :: (state == A) || (state == B) || (state == C) && (assert_s == present) -> lastState = state; state = D;
 	        :: else -> skip;
             fi;
-        }
-	:: if
-		:: (return_s == present) -> state = A; timerCount = 2000;
+        
+	   if
+		:: ((state == E) || (state == D)) && (return_s == present) -> state = A;
+		:: else -> skip;
 	   fi;
+	   }
     od;
 }
 
